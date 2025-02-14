@@ -1,12 +1,80 @@
+interface Attachment {
+    val type: String
+}
+
+ class videoAttachment(
+    val video: Video
+) : Attachment {
+    override val type: String = "Video"
+}
+
+ class Video(
+    val id: Int,
+    val ownerId: Int,
+    val titlr: String,
+    val duration: Int
+)
+
+ class photoAttachment(
+    val photo: Photo
+) : Attachment {
+    override val type: String = "Photo"
+}
+
+ class Photo(
+    val id: Int,
+    val ownerId: Int,
+    val photo130: String,
+    val photo604: String
+)
+
+ class graafittiAttachment(
+    val graffiti: Graffiti
+) : Attachment {
+    override val type: String = "Grafitti"
+}
+
+ class Graffiti(
+    val id: Int,
+    val ownerId: Int,
+    val photo130: String,
+    val photo604: String
+)
+
+ class audioAttachment(
+    val audio: Audio
+) : Attachment {
+    override val type: String = "Audio"
+}
+
+ class Audio(
+    val id: String,
+    val date: String,
+    val artist: String,
+    val albom: String
+)
+
+ class urlAttachments(
+    val url: Url
+) : Attachment {
+    override val type: String = "Url"
+}
+
+ class Url(
+    val title: String,
+    val caption: String,
+    val description: String,
+    val previewpage: String
+)
+
 data class Post(
     val id: Int,
     val text: String = " ",
-
-    val fromId: Int,
-    val date: Int,
+    val fromId: Int? = null,
+    val date: Int? = null,
     val likes: Likes = Likes(),
-
     val views: Int = 0,
+    val attachments: Array<Attachment> = emptyArray()
 )
 
 
@@ -56,20 +124,21 @@ object WallSevice {
 fun main() {
     WallSevice.add(
         Post(
+            id = 1,
             text = "Hello World",
-            id = 0,
-            fromId = 2,
-            date = 1234,
+            fromId = null,
+            date = 12 / 12 / 12,
             likes = Likes(count = 1, userLike = true),
-            views = 12
-        )
+            views = 12,
+
+            )
     )
     WallSevice.add(
         Post(
             text = "Holla Mundo",
             id = 1,
             fromId = 2,
-            date = 4324,
+            date = null,
             likes = Likes(count = 100, userLike = true),
             views = 12
         )
