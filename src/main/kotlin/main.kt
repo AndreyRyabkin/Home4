@@ -2,69 +2,69 @@ interface Attachment {
     val type: String
 }
 
- class videoAttachment(
-    val video: Video
+class videoAttachment(
+    val video: Video,
 ) : Attachment {
     override val type: String = "Video"
 }
 
- class Video(
+class Video(
     val id: Int,
     val ownerId: Int,
     val titlr: String,
-    val duration: Int
+    val duration: Int,
 )
 
- class photoAttachment(
-    val photo: Photo
+class photoAttachment(
+    val photo: Photo,
 ) : Attachment {
     override val type: String = "Photo"
 }
 
- class Photo(
+class Photo(
     val id: Int,
     val ownerId: Int,
     val photo130: String,
-    val photo604: String
+    val photo604: String,
 )
 
- class graafittiAttachment(
-    val graffiti: Graffiti
+class graafittiAttachment(
+    val graffiti: Graffiti,
 ) : Attachment {
     override val type: String = "Grafitti"
 }
 
- class Graffiti(
+class Graffiti(
     val id: Int,
     val ownerId: Int,
     val photo130: String,
-    val photo604: String
+    val photo604: String,
 )
 
- class audioAttachment(
-    val audio: Audio
+class audioAttachment(
+    val audio: Audio,
 ) : Attachment {
     override val type: String = "Audio"
 }
 
- class Audio(
+class Audio(
     val id: String,
     val date: String,
     val artist: String,
-    val albom: String
+    val albom: String,
 )
 
- class urlAttachments(
-    val url: Url
+class urlAttachments(
+    val url: Url,
 ) : Attachment {
     override val type: String = "Url"
 }
 
- class Url(
+class Url(
     val title: String,
     val caption: String,
     val description: String,
-    val previewpage: String
+    val previewpage: String,
 )
 
 data class Post(
@@ -74,17 +74,35 @@ data class Post(
     val date: Int? = null,
     val likes: Likes = Likes(),
     val views: Int = 0,
-    val attachments: Array<Attachment> = emptyArray()
+    val attachments: Array<Attachment> = emptyArray(),
 )
 
 
 data class Likes(
     val count: Int = 0,
-    val userLike: Boolean = true
+    val userLike: Boolean = true,
 )
 
+data class Comment(
+    val id: Int,
+    val postId: Int,
+    val date: Int,
+    val text: String,
+)
+
+class PostNotFoundException(message: String) : Exception(message)
 
 object WallSevice {
+    private var comments = emptyArray<Comment>()
+    fun createComment(postId: Int, comment: Comment): Comment {
+        for (post in posts) {
+            if (post.id == postId) {
+                comments += comment
+                return comment
+            }
+        }
+        throw PostNotFoundException("Пост с ID $postId не найден")
+    }
 
 
     private var posts = emptyArray<Post>()
@@ -144,12 +162,13 @@ fun main() {
         )
     )
 
+
     WallSevice.printPost()
     println(
         WallSevice.update(
             Post(
                 text = "Holla Mundo",
-                id = 5,
+                id = 2,
                 fromId = 2,
                 date = 4324,
                 likes = Likes(count = 100, userLike = true),
@@ -158,7 +177,29 @@ fun main() {
             )
         )
     )
+    try {
+
+        val addComment = WallSevice.createComment(
+            postId = 1,
+            comment = Comment(id = 1, date = 140224, text = "Новый пост", postId = 1)
+        )
+        println("Комментарий добавлен: $addComment")
+    } catch (e: PostNotFoundException) {
+        println(e.message)
+    }
+    try {
+
+        val addComment = WallSevice.createComment(
+            postId = 3,
+            comment = Comment(id = 3, date = 140224, text = "Новый пост", postId = 3)
+        )
+        println("Комментарий добавлен: $addComment")
+    } catch (e: PostNotFoundException) {
+        println(e.message)
+    }
+
 }
+
 
 
 

@@ -72,5 +72,31 @@ class AutoTest {
     }
 
 
+    @Test
+    fun addCommentToExistingPost() {
+
+        val post = Post(id = 1, text = "Hello World")
+        WallSevice.add(post)
+        val comment = Comment(id = 1, postId = 1, date = 1234567890, text = "Новый пост")
+
+
+        val addedComment = WallSevice.createComment(postId = 1, comment = comment)
+
+
+        assertEquals(comment, addedComment)
+    }
+
+    @Test(expected = PostNotFoundException::class)
+    fun shouldThrowWhenPostNotFound() {
+
+        val comment = Comment(id = 1, postId = 999, date = 1234567890, text = "Поста нет")
+
+
+        WallSevice.createComment(postId = 999, comment = comment)
+    }
 }
+
+
+
+
 
